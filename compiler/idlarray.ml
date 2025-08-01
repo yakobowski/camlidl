@@ -55,11 +55,12 @@ let array_ml_to_c ml_to_c oc onstack pref attr ty_elt v c =
     match attr.bound with
     | None ->
         if onstack then
-          let str_or_bytes = if attr.is_string then "String" else "Bytes" in
-          iprintf oc "%s = (%a) %s_val(%s);\n"
+          let conversion =
+            if attr.is_string then "String_val" else "Bytes_val" in
+          iprintf oc "%s = (%a) %s(%s);\n"
                   c
                   out_c_type (Type_pointer(Ptr, ty_elt))
-                  str_or_bytes
+                  conversion
                   v
         else begin
           iprintf oc "%s = camlidl_malloc_string(%s, _ctx);\n" c v;
